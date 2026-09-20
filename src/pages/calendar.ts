@@ -36,7 +36,11 @@ export function renderCalendar(app: HTMLElement) {
   farmLink.href = '/farm';
   farmLink.addEventListener('click', (e) => { e.preventDefault(); router.navigate('/farm'); });
 
-  quickNav.append(pickLink, farmLink);
+  const ledgerLink = createElement('a', 'quick-link', '账本') as HTMLAnchorElement;
+  ledgerLink.href = '/ledger';
+  ledgerLink.addEventListener('click', (e) => { e.preventDefault(); router.navigate('/ledger'); });
+
+  quickNav.append(pickLink, farmLink, ledgerLink);
   header.appendChild(quickNav);
 
   // 星期标题

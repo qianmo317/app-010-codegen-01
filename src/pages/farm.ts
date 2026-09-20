@@ -12,7 +12,10 @@ export function renderFarm(app: HTMLElement) {
   const backBtn = createElement('button', 'back-btn', '◀ 返回');
   backBtn.addEventListener('click', () => router.navigate('/'));
   const title = createElement('h1', 'page-title', '节气农事表');
-  header.append(backBtn, title);
+  const ledgerBtn = createElement('button', 'nav-btn', '农事账本');
+  ledgerBtn.style.marginLeft = 'auto';
+  ledgerBtn.addEventListener('click', () => router.navigate('/ledger'));
+  header.append(backBtn, title, ledgerBtn);
 
   // 节气列表
   const termList = createElement('div', 'term-list');
