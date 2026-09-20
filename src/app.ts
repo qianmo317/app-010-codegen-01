@@ -3,6 +3,7 @@ import { renderCalendar } from './pages/calendar';
 import { renderDayDetail } from './pages/day-detail';
 import { renderPick } from './pages/pick';
 import { renderFarm } from './pages/farm';
+import { renderRecords } from './pages/records';
 
 export function initApp() {
   const app = document.getElementById('app');
@@ -29,6 +30,9 @@ export function initApp() {
         break;
       case '/farm':
         renderFarm(app);
+        break;
+      case '/records':
+        renderRecords(app);
         break;
       default:
         renderCalendar(app);
@@ -611,6 +615,274 @@ function injectStyles() {
       border-bottom: none;
     }
 
+    /* 农事记录页 */
+    .term-range {
+      font-size: 13px;
+      color: var(--text-light);
+      font-weight: normal;
+      margin-left: 8px;
+    }
+
+    .reminder-ok {
+      color: var(--secondary);
+      font-size: 14px;
+    }
+
+    .reminder-item {
+      display: flex;
+      gap: 8px;
+      padding: 6px 0;
+      font-size: 14px;
+      align-items: baseline;
+    }
+
+    .reminder-plot {
+      color: var(--accent);
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .quick-add-card .form-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .quick-add-card select,
+    .quick-add-card input {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 14px;
+      background: white;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .type-btn {
+      padding: 8px 4px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .type-btn.selected {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .mini-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .mini-btn:hover { background: var(--primary); color: white; }
+    .mini-btn.primary { background: var(--primary); color: white; }
+    .mini-btn.danger { border-color: var(--accent); color: var(--accent); }
+    .mini-btn.danger:hover { background: var(--accent); color: white; }
+
+    .link-btn {
+      border: none;
+      background: none;
+      color: #1565c0;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 2px 6px;
+    }
+
+    .new-plot-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      padding: 10px;
+      background: #f3ede2;
+      border-radius: 8px;
+    }
+
+    .new-plot-form input {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 14px;
+      flex: 1;
+      min-width: 110px;
+    }
+
+    .plot-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .plot-name {
+      font-size: 17px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .plot-area {
+      font-size: 13px;
+      color: var(--text-light);
+      font-weight: normal;
+      margin-left: 6px;
+    }
+
+    .plot-actions { display: flex; gap: 6px; }
+
+    .plot-crop-line {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .transfer-badge {
+      padding: 2px 10px;
+      background: #eee;
+      color: #999;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .plot-card.transferred { opacity: 0.85; }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .stat-item {
+      padding: 3px 10px;
+      background: #fff8e1;
+      color: #8d6e00;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .crop-group { margin-top: 8px; }
+
+    .crop-group-title {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 13px;
+      margin: 8px 0 4px;
+    }
+
+    .record-row {
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .record-row:last-child { border-bottom: none; }
+
+    .record-main {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .record-date {
+      color: var(--text-light);
+      font-size: 13px;
+      min-width: 44px;
+    }
+
+    .record-type {
+      padding: 1px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      border: 1px solid;
+    }
+
+    .record-detail { font-size: 14px; }
+
+    .merged-badge {
+      font-size: 11px;
+      color: #999;
+      background: #f0f0f0;
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+
+    .record-meta {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+
+    .edit-history {
+      margin-top: 6px;
+      padding: 8px 10px;
+      background: #f7f3ea;
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .edit-item { padding: 2px 0; }
+
+    .edit-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .edit-form input, .edit-form select {
+      padding: 6px 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .edit-form input[type="text"] { flex: 1; min-width: 100px; }
+    .edit-btns { display: flex; gap: 6px; }
+
+    .empty-tip {
+      color: var(--text-light);
+      font-size: 13px;
+      padding: 8px 0;
+    }
+
+    .section-toggle {
+      width: 100%;
+      padding: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text-light);
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .transferred-section { margin-top: 20px; }
+    .transferred-body { margin-top: 10px; }
+
     /* 响应式 */
     @media (max-width: 600px) {
       .page { padding: 8px; }
@@ -620,6 +892,7 @@ function injectStyles() {
       .yiji-row { flex-direction: column; }
       .hour-row { grid-template-columns: 60px 80px 60px 50px; font-size: 13px; }
       .ganzhi { gap: 8px; font-size: 14px; }
+      .type-grid { grid-template-columns: repeat(4, 1fr); }
     }
   `;
   document.head.appendChild(style);
